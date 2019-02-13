@@ -1,0 +1,21 @@
+{
+    "name": "mapbender/ldapbundle",
+    "description": "Add LDAP Login to Mapbender with FOM as Fallback",
+    "keywords": ["mapbender","ldap","security"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {"name": "David Patzke"}
+    ],
+    "require": {
+
+    },
+    "autoload": {
+        "psr-4": {"Mapbender\\LDAPBundle\\": "."}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+services:
+    ldapClient:
+        class: Symfony\Component\Ldap\LdapClient
+        arguments:
+        - %ldap.host% #Address to LDAPServer
+        - %ldap.port% #Port where LDAPServer is listening
+        - %ldap.version% #LDAP Protocol version
+        - false           # SSL #Use SSL
+        - false        # TLS 'Use TLS
+    ldapUserProvider:
+        class: Mapbender\LDAPBundle\Security\Provider\LDAPUserProvider
+        arguments:
+        - @ldapClient
+        - %ldap.bind.dn%
+        - %ldap.bind.pwd%
+        - %ldap.user.baseDN%
+        - %ldap.user.query%
+        - %ldap.group.baseDN%
+        - %ldap.group.query%
+        - [ROLE_USER]
+        - %ldap.group.id%
+    security.authentication.provider.mbldap:
+        class: Mapbender\LDAPBundle\Security\Provider\MapbenderLdapBindAuthenticationProvider
+        arguments:
+            - @ldapClient
+            -
+            -
+            -
+            -
+            - %ldap.user.dn%
+            -
+
+
+
+
+
+
