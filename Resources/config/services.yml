@@ -5,8 +5,8 @@ services:
         - %ldap.host% #Address to LDAPServer
         - %ldap.port% #Port where LDAPServer is listening
         - %ldap.version% #LDAP Protocol version
-        - false           # SSL #Use SSL
-        - false        # TLS 'Use TLS
+        - %ldap.useSSL%           # SSL #Use SSL
+        - %ldap.useTLS%      # TLS 'Use TLS
     ldapUserProvider:
         class: Mapbender\LDAPBundle\Security\Provider\LDAPUserProvider
         arguments:
