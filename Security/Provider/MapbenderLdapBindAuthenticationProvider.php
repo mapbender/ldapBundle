@@ -47,30 +47,20 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
      */
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
-        $username = $token->getUsername();
+
         $password = $token->getCredentials();
+        try{
+            parent::checkAuthentication($user, $token);
+        } catch(BadCredentialsException $e){
 
-        if ('' === (string) $password) {
-            throw new BadCredentialsException('The presented password must not be empty.');
-        }
-
-        try {
-            $username = $this->ldap->escape($username, '', LDAP_ESCAPE_DN);
-
-            $dn = str_replace('{username}', $username, $this->dnString);
-
-            $this->ldap->bind($dn, $password);
-        } catch (ConnectionException $e) {
-
-            try {
                 if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $password, $user->getSalt())) {
                     throw new BadCredentialsException('The presented password is invalid.');
                 }
-            }catch (ConnectionException $e){
-                throw new BadCredentialsException('The presented password is invalid.');
-            }
 
         }
+
+
+
     }
 
 
