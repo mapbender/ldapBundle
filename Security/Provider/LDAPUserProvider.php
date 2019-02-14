@@ -106,12 +106,12 @@ class LDAPUserProvider implements UserProviderInterface
                     }
                 }
             } else {
+
                 throw new UsernameNotFoundException(sprintf('Users "%s" groups could not be fetched from LDAP.', $username), 0);
             }
 
 
         } catch(\Exception $e){
-            throw $e;
             throw new ConnectionException("Connection to LDAP Server could be established", 0, $e);
         }
 
