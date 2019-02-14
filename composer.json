@@ -1,6 +1,6 @@
 {
     "name": "mapbender/ldapbundle",
-    "description": "Add LDAP Login to Mapbender with FOM as Fallback",
+    "description": "Add LDAP Login to Mapbender with FOM as fallback",
     "keywords": ["mapbender","ldap","security"],
     "type": "library",
     "license": "MIT",
