@@ -100,19 +100,19 @@ class LDAPUserProvider implements UserProviderInterface
                     foreach($ldapGroups as $group){
                         if (!empty($group['cn'][0])) {
 
-                            $groups[] = 'ROLE_' . $group['cn'][0];
+                            $groups[] = 'ROLE_' . strtoupper($group['cn'][0]);
                         }
 
                     }
                 }
             } else {
-
                 throw new UsernameNotFoundException(sprintf('Users "%s" groups could not be fetched from LDAP.', $username), 0);
             }
 
 
         } catch(\Exception $e){
-            throw new ConnectionException("Connection to LDAP Server could be established", 0, $e);
+            //This is in fact not a UsernameNotFoundException but otherwise the chain user provider will not work because it catches only this particular exception
+            throw new UsernameNotFoundException("Connection to LDAP Server could be established", 0, $e);
         }
 
 
