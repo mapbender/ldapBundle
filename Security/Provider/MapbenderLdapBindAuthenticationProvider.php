@@ -8,7 +8,6 @@
 
 namespace Mapbender\LDAPBundle\Security\Provider;
 
-
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Ldap\LdapClientInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -18,7 +17,6 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-
 use Symfony\Component\Security\Core\Authentication\Provider\LdapBindAuthenticationProvider;
 
 class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationProvider
@@ -53,14 +51,14 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
             parent::checkAuthentication($user, $token);
         } catch(BadCredentialsException $e){
 
+            try {
                 if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $password, $user->getSalt())) {
                     throw new BadCredentialsException('The presented password is invalid.');
                 }
-
+            } catch (\Exception $e){
+                throw new BadCredentialsException('The presented password is invalid.');
+            }
         }
-
-
-
     }
 
 
