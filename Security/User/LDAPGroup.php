@@ -3,7 +3,7 @@
 
 namespace Mapbender\LDAPBundle\Security\User;
 
-use FOM\UserBundle\Entity\MapbenderGroupInterface;
+use Mapbender\LDAPBundle\Security\User\MapbenderGroupInterface;
 
 class LDAPGroup implements MapbenderGroupInterface {
 
