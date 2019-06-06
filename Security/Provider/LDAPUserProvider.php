@@ -86,13 +86,18 @@ class LDAPUserProvider implements UserProviderInterface
             $this->ldapClient->bind($this->baseDn,$this->basePw);
             $username = $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER);
             $userQuery = str_replace('{username}', $username, $this->userQuery);
-            $user = $this->ldapClient->find($this->userDN,$userQuery, '(objectClass=*)');
-
+            $user = $this->ldapClient->find($this->userDN,$userQuery, '');
+            
             if($user){
+                // We assume here that our username has to be unique otherwise login would not work in general.
+                // LDAP search gives us a result set, so our user has to be the first entry and using user[0] should be save.
+                // According to RFC https://tools.ietf.org/html/rfc4511#page-20 a search result must provide the <DN> attribute
+                // and resulting from that we can always be save that $user[0]['dn']; will have the correct value!
+                $ldapGroupSearchQuery = str_replace('{userDN}', $user[0]['dn'], $this->groupQuery);
 
                 $groups = $this->defaultRoles;
-
-                $ldapGroupSearchQuery = str_replace('{username}', $username, $this->groupQuery);
+                
+                
                 $ldapGroups = $this->ldapClient->find($this->groupBaseDN,$ldapGroupSearchQuery);
 
                 if($ldapGroups) {
