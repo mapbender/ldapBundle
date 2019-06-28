@@ -25,7 +25,10 @@ class LDAPIdentitiesProvider extends \FOM\UserBundle\Component\FOMIdentitiesProv
         if ($ldapUserList !== null) {
 
             foreach (array_slice($ldapUserList, 2) as $ldapUser) {
-                $user[] = new User($ldapUser[$nameAttribute][0]);
+                if(isset($ldapUser[$nameAttribute][0])){
+                    $user[] = new User($ldapUser[$nameAttribute][0]);
+                }
+                
             }
 
         }
@@ -66,7 +69,8 @@ class LDAPIdentitiesProvider extends \FOM\UserBundle\Component\FOMIdentitiesProv
         $ldapGroupList = $ldapClient->find($groupDn, $groupFilter);
         if ($ldapGroupList != null) {
             foreach (array_slice($ldapGroupList, 2) as $ldapGroup) {
-                $groups[] = new Group($ldapGroup[$groupIdentifier][0]);
+                isset($ldapGroup[$groupIdentifier]) ? new Group($ldapGroup[$groupIdentifier][0]) : null;
+               
             }
 
         }
