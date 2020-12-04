@@ -105,7 +105,7 @@ class LDAPUserProvider implements UserProviderInterface
                     foreach($ldapGroups as $group){
                         if (!empty($group['cn'][0])) {
 
-                            $groups[] = 'ROLE_' . strtoupper($group['cn'][0]);
+                            $groups[] = 'ROLE_GROUP_' . strtoupper($group['cn'][0]);
                         }
 
                     }

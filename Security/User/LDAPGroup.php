@@ -3,9 +3,9 @@
 
 namespace Mapbender\LDAPBundle\Security\User;
 
-use Mapbender\LDAPBundle\Security\User\MapbenderGroupInterface;
+use FOM\UserBundle\Entity\Group as Group;
 
-class LDAPGroup implements MapbenderGroupInterface {
+class LDAPGroup extends Group {
 
     protected $title;
 
@@ -26,6 +26,6 @@ class LDAPGroup implements MapbenderGroupInterface {
 
     public function getAsRole()
     {
-       return   'ROLE_' . strtoupper($this->getTitle());
+       return   'ROLE_GROUP_' . strtoupper($this->getTitle());
     }
 }
