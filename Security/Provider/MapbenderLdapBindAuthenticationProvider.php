@@ -27,7 +27,7 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
     private $dnString;
     private $encoderFactory;
 
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, EncoderFactoryInterface $encoderFactory,$dnString = '{cn=username}', $hideUserNotFoundExceptions = true)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, EncoderFactoryInterface $encoderFactory,$dnString = '{cn=username}', $hideUserNotFoundExceptions = true, $userQuery)
     {
         parent::__construct( $userProvider,  $userChecker, $providerKey,  $ldap, $dnString, $hideUserNotFoundExceptions);
 
@@ -36,6 +36,10 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
         $this->encoderFactory = $encoderFactory ;
         $this->dnString = $dnString;
 
+        // support Mapbender < 3.2.x (Symfony 2.8)
+        if (method_exists(get_parent_class($this), 'setQueryString')) {
+            $this->setQueryString($userQuery);
+        }
     }
 
 
