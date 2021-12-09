@@ -1,11 +1,23 @@
 <?php
 
 namespace Mapbender\LDAPBundle\Security\Provider;
+
+use Doctrine\Persistence\ManagerRegistry;
 use Mapbender\LDAPBundle\Security\User\LDAPUser as User;
 use Mapbender\LDAPBundle\Security\User\LDAPGroup as Group;
 use Mapbender\LDAPBundle\Exceptions\MissconfiguredLDAPClientException;
+use FOM\UserBundle\Component\Ldap;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+
 class LDAPIdentitiesProvider extends \FOM\UserBundle\Component\FOMIdentitiesProvider
 {
+    protected $container;
+
+    public function __construct(ManagerRegistry $doctrineRegistry, Ldap\UserProvider $ldapUserProvider, $userEntityClass, Container $container)
+    {
+        parent::__construct($doctrineRegistry, $ldapUserProvider, $userEntityClass);
+        $this->container = $container;
+    }
 
     public function getAllUsers()
     {
@@ -28,7 +40,7 @@ class LDAPIdentitiesProvider extends \FOM\UserBundle\Component\FOMIdentitiesProv
                 if(isset($ldapUser[$nameAttribute][0])){
                     $user[] = new User($ldapUser[$nameAttribute][0]);
                 }
-                
+
             }
 
         }
@@ -72,8 +84,8 @@ class LDAPIdentitiesProvider extends \FOM\UserBundle\Component\FOMIdentitiesProv
                 if(isset($ldapGroup[$groupIdentifier])){
                     $groups[] = new Group($ldapGroup[$groupIdentifier][0]);
                 }
-             
-               
+
+
             }
 
         }
