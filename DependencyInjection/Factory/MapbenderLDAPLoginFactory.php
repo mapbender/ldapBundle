@@ -9,9 +9,10 @@
 namespace Mapbender\LDAPBundle\DependencyInjection\Factory;
 
 
+use Mapbender\LDAPBundle\Security\Provider\MapbenderLdapBindAuthenticationProvider;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
@@ -20,16 +21,20 @@ class MapbenderLDAPLoginFactory extends FormLoginFactory
 
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
-        $provider = 'security.authentication.provider.mbldap.'.$id;
-        $container->setDefinition($provider, new DefinitionDecorator('security.authentication.provider.mbldap'))
-            ->replaceArgument(0, new Reference($userProviderId))
-            ->replaceArgument(1, new Reference('security.user_checker.'.$id))
-            ->replaceArgument(2, $id)
-            ->replaceArgument(3, new Reference($config['service']))
-            ->replaceArgument(4, new Reference('security.encoder_factory'))
-        ;
+        $providerId = 'security.authentication.provider.mbldap.' . $id;
+        $providerDefinition = new Definition(MapbenderLdapBindAuthenticationProvider::class, array(
+            new Reference($userProviderId),
+            new Reference('security.user_checker.' . $id),
+            $id,
+            new Reference($config['service']),
+            new Reference('security.encoder_factory'),
+            $container->getParameterBag()->resolveValue('%ldap.user.dn%'),
+            null,   // ???
+            $container->getParameterBag()->resolveValue('%ldap.user.query%'),
+        ));
+        $container->setDefinition($providerId, $providerDefinition);
 
-        return $provider;
+        return $providerId;
     }
 
 
