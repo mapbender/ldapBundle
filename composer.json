@@ -8,7 +8,7 @@
         {"name": "David Patzke"}
     ],
     "require": {
-
+        "symfony/ldap": "^3.4 || ^4"
     },
     "autoload": {
         "psr-4": {"Mapbender\\LDAPBundle\\": "."}

@@ -8,7 +8,7 @@
 
 namespace Mapbender\LDAPBundle\Security\Provider;
 
-use Symfony\Component\Ldap\LdapClientInterface;
+use Symfony\Component\Ldap\LdapInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -21,9 +21,16 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
 {
     private $encoderFactory;
 
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, EncoderFactoryInterface $encoderFactory, $dnString, $userQuery)
+    public function __construct(UserProviderInterface $userProvider,
+                                UserCheckerInterface $userChecker,
+                                $providerKey,
+                                LdapInterface $ldap,
+                                EncoderFactoryInterface $encoderFactory,
+                                $dnString,
+                                $userQuery,
+                                $searchDn, $searchPassword)
     {
-        parent::__construct( $userProvider,  $userChecker, $providerKey,  $ldap, $dnString, true);
+        parent::__construct( $userProvider,  $userChecker, $providerKey,  $ldap, $dnString, true, $searchDn, $searchPassword);
 
         $this->encoderFactory = $encoderFactory ;
 

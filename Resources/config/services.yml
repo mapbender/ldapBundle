@@ -1,6 +1,6 @@
 services:
     ldapClient:
-        class: Symfony\Component\Ldap\LdapClient
+        class: Mapbender\LDAPBundle\Component\LdapClient
         arguments:
         - '%ldap.host%' #Address to LDAPServer
         - '%ldap.port%' #Port where LDAPServer is listening

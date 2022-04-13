@@ -3,8 +3,7 @@
 
 namespace Mapbender\LDAPBundle\Security\Provider;
 
-use Symfony\Component\Ldap\Exception\ConnectionException;
-use Symfony\Component\Ldap\LdapClientInterface;
+use Symfony\Component\Ldap\LdapInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -30,7 +29,7 @@ class LDAPUserProvider implements UserProviderInterface
     /**
      * LdapMultiEncoderUserProvider constructor.
      *
-     * @param LdapClientInterface $ldap
+     * @param LdapInterface $ldapClient
      * @param string              $baseDn
      * @param string|null $basePw
      * @param string $userDN
@@ -40,7 +39,7 @@ class LDAPUserProvider implements UserProviderInterface
      * @param string[] $defaultRoles
      * @param string $groupId
      */
-    public function __construct(LdapClientInterface $ldapClient,$baseDn, $basePw, $userDN,$userQuery,$groupBaseDN,$groupQuery, Array $defaultRoles = ['ROLE_USER'], $groupId = 'cn')
+    public function __construct(LdapInterface $ldapClient,$baseDn, $basePw, $userDN,$userQuery,$groupBaseDN,$groupQuery, Array $defaultRoles = ['ROLE_USER'], $groupId = 'cn')
     {
 
         $this->ldapClient        = $ldapClient;
@@ -52,9 +51,6 @@ class LDAPUserProvider implements UserProviderInterface
         $this->defaultRoles      = $defaultRoles;
         $this->groupBaseDN       = $groupBaseDN;
         $this->groupId = $groupId;
-
-
-
     }
 
 
@@ -81,29 +77,21 @@ class LDAPUserProvider implements UserProviderInterface
             $this->ldapClient->bind($this->baseDn,$this->basePw);
             $username = $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER);
             $userQuery = str_replace('{username}', $username, $this->userQuery);
-            $user = $this->ldapClient->find($this->userDN,$userQuery, '');
+            $matches = $this->ldapClient->query($this->userDN, $userQuery)->execute()->toArray();
+            $user = $matches[0];
             
-            if($user){
-                // We assume here that our username has to be unique otherwise login would not work in general.
-                // LDAP search gives us a result set, so our user has to be the first entry and using user[0] should be save.
-                // According to RFC https://tools.ietf.org/html/rfc4511#page-20 a search result must provide the <DN> attribute
-                // and resulting from that we can always be save that $user[0]['dn']; will have the correct value!
-                $ldapGroupSearchQuery = str_replace('{userDN}', $user[0]['dn'], $this->groupQuery);
+            if ($user) {
+                $ldapGroupSearchQuery = str_replace('{userDN}', $user->getDn(), $this->groupQuery);
 
                 $groups = $this->defaultRoles;
                 
                 
-                $ldapGroups = $this->ldapClient->find($this->groupBaseDN,$ldapGroupSearchQuery);
-
-                if($ldapGroups) {
-
-                    foreach($ldapGroups as $group){
-                        if (!empty($group['cn'][0])) {
-
-                            $groups[] = 'ROLE_GROUP_' . strtoupper($group['cn'][0]);
-                        }
-
+                $ldapGroups = $this->ldapClient->query($this->groupBaseDN, $ldapGroupSearchQuery)->execute();
+                foreach ($ldapGroups as $group){
+                    if (!empty($group->getAttribute('cn'))) {
+                        $groups[] = 'ROLE_GROUP_' . strtoupper($group->getAttribute('cn')[0]);
                     }
+
                 }
             } else {
                 throw new UsernameNotFoundException(sprintf('Users "%s" groups could not be fetched from LDAP.', $username), 0);
