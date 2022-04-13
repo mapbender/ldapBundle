@@ -8,12 +8,10 @@
 
 namespace Mapbender\LDAPBundle\Security\Provider;
 
-use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Ldap\LdapClientInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -21,20 +19,13 @@ use Symfony\Component\Security\Core\Authentication\Provider\LdapBindAuthenticati
 
 class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationProvider
 {
-
-    private $userProvider;
-    private $ldap;
-    private $dnString;
     private $encoderFactory;
 
     public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, EncoderFactoryInterface $encoderFactory,$dnString = '{cn=username}', $hideUserNotFoundExceptions = true, $userQuery)
     {
         parent::__construct( $userProvider,  $userChecker, $providerKey,  $ldap, $dnString, $hideUserNotFoundExceptions);
 
-        $this->userProvider = $userProvider;
-        $this->ldap = $ldap;
         $this->encoderFactory = $encoderFactory ;
-        $this->dnString = $dnString;
 
         // support Mapbender < 3.2.x (Symfony 2.8)
         if (method_exists(get_parent_class($this), 'setQueryString')) {
