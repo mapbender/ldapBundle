@@ -13,37 +13,32 @@ use Mapbender\LDAPBundle\Security\User\LDAPUser;
 
 
 /**
- * Class LdapMultiEncoderUserProvider
- *
- * @package Wheregroup\Component
  * @author  David Patzke <david.patzke@wheregroup.com>
  */
 class LDAPUserProvider implements UserProviderInterface
 {
     private $ldapClient;
     private $baseDn;
-    private $basePW;
-    private $searchDn;
-    private $searchPassword;
+    private $basePw;
+    private $userDN;
     private $defaultRoles;
-    private $defaultSearch;
-    private $groupSearchFilter;
+    private $userQuery;
+    private $groupQuery;
     private $groupBaseDN;
-    private $group_uid_key;
+    private $groupId;
 
     /**
      * LdapMultiEncoderUserProvider constructor.
      *
      * @param LdapClientInterface $ldap
      * @param string              $baseDn
-     * @param null                $searchDn
-     * @param null                $searchPassword
-     * @param array               $defaultRoles
-     * @param string              $uidKey
-     * @param string              $filter
+     * @param string|null $basePw
+     * @param string $userDN
+     * @param string $userQuery
      * @param string              $groupBaseDN
-     * @param string              $groupSearchFilter
-     * @param string              $group_uid_key
+     * @param string $groupQuery
+     * @param string[] $defaultRoles
+     * @param string $groupId
      */
     public function __construct(LdapClientInterface $ldapClient,$baseDn, $basePw, $userDN,$userQuery,$groupBaseDN,$groupQuery, Array $defaultRoles = ['ROLE_USER'], $groupId = 'cn')
     {
