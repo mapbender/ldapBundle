@@ -29,7 +29,6 @@ class MapbenderLDAPLoginFactory extends FormLoginFactory
             new Reference($config['service']),
             new Reference('security.encoder_factory'),
             $container->getParameterBag()->resolveValue('%ldap.user.dn%'),
-            null,   // ???
             $container->getParameterBag()->resolveValue('%ldap.user.query%'),
         ));
         $container->setDefinition($providerId, $providerDefinition);

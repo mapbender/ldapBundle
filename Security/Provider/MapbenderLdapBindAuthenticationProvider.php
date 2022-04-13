@@ -21,9 +21,9 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
 {
     private $encoderFactory;
 
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, EncoderFactoryInterface $encoderFactory,$dnString = '{cn=username}', $hideUserNotFoundExceptions = true, $userQuery)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, EncoderFactoryInterface $encoderFactory, $dnString, $userQuery)
     {
-        parent::__construct( $userProvider,  $userChecker, $providerKey,  $ldap, $dnString, $hideUserNotFoundExceptions);
+        parent::__construct( $userProvider,  $userChecker, $providerKey,  $ldap, $dnString, true);
 
         $this->encoderFactory = $encoderFactory ;
 
