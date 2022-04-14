@@ -45,7 +45,6 @@ firewalls:
     mapbender_ldap:
       login_path: /user/login
       check_path: /user/login/check
-      service: ldapClient
     form_login:
       check_path: /user/login/check
       login_path: /user/login

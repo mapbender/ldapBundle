@@ -14,7 +14,6 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLogin
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
 class MapbenderLDAPLoginFactory extends FormLoginFactory
 {
@@ -26,7 +25,7 @@ class MapbenderLDAPLoginFactory extends FormLoginFactory
             new Reference($userProviderId),
             new Reference('security.user_checker.' . $id),
             $id,
-            new Reference($config['service']),
+            new Reference('ldapClient'),
             new Reference('security.encoder_factory'),
             $container->getParameterBag()->resolveValue('%ldap.user.dn%'),
             $container->getParameterBag()->resolveValue('%ldap.user.query%'),
@@ -36,19 +35,6 @@ class MapbenderLDAPLoginFactory extends FormLoginFactory
         $container->setDefinition($providerId, $providerDefinition);
 
         return $providerId;
-    }
-
-
-
-    public function addConfiguration(NodeDefinition $node)
-    {
-        parent::addConfiguration($node);
-
-        $node
-            ->children()
-            ->scalarNode('service')->end()
-
-        ;
     }
 
     public function getKey()
