@@ -23,6 +23,8 @@ services:
         - '%ldap.version%' #LDAP Protocol version
         - '%ldap.useSSL%'           # SSL #Use SSL
         - '%ldap.useTLS%'      # TLS 'Use TLS
+        - '%ldap.bind.dn%'
+        - '%ldap.bind.pwd%'
     LDAPUserProvider:
         class: Mapbender\LDAPBundle\Security\Provider\LDAPUserProvider
         arguments:
@@ -42,3 +44,5 @@ services:
         - '%ldap.group.baseDN%'
         - '%ldap.group.id%'
         - '%ldap.group.adminFilter%'
+    fom.ldap_client:
+        alias: ldapClient
