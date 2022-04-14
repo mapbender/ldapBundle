@@ -1,3 +1,17 @@
+parameters:
+    # Alias to values Mapbender ACL assignment machinery evaluates
+    ## for fom.ldap_user_identities_provider
+    ldap_user_base_dn: '%ldap.user.baseDN%'
+    ldap_user_name_attribute: '%ldap.user.nameAttribute%'
+    ldap_user_filter: '%ldap.user.adminFilter%'
+    ## for fom.ldap_client
+    ldap_host: '%ldap.host%'
+    ldap_port: '%ldap.port%'
+    ldap_version: '%ldap.version%'
+    ldap_bind_dn: '%ldap.bind.dn%'
+    ldap_bind_pwd: '%ldap.bind.pwd%'
+
+
 services:
     ldapClient:
         class: Mapbender\LDAPBundle\Component\LdapClient

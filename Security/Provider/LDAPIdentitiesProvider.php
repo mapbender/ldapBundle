@@ -19,36 +19,6 @@ class LDAPIdentitiesProvider extends \FOM\UserBundle\Component\FOMIdentitiesProv
         $this->container = $container;
     }
 
-    public function getAllUsers()
-    {
-
-        $user = parent::getAllUsers();
-        try {
-            $nameAttribute = $this->container->getParameter('ldap.user.nameAttribute');
-            $userDn = $this->container->getParameter('ldap.user.baseDn');
-            $userQuery = $this->container->getParameter('ldap.user.adminFilter');
-        } catch (\Exception $e) {
-            throw new MissconfiguredLDAPClientException();
-        }
-
-        $ldapClient = $this->getLdapConnection();
-        $ldapUserList = $ldapClient->find($userDn, $userQuery);
-
-        if ($ldapUserList !== null) {
-
-            foreach (array_slice($ldapUserList, 2) as $ldapUser) {
-                if(isset($ldapUser[$nameAttribute][0])){
-                    $user[] = new User($ldapUser[$nameAttribute][0]);
-                }
-
-            }
-
-        }
-
-        return $user;
-
-    }
-
     public function getLdapConnection()
     {
         $ldapClient = $this->container->get('ldapClient');
