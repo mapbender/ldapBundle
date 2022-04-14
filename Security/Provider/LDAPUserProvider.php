@@ -17,43 +17,36 @@ use Mapbender\LDAPBundle\Security\User\LDAPUser;
 class LDAPUserProvider implements UserProviderInterface
 {
     private $ldapClient;
+    /** @var LDAPGroupProvider */
+    protected $groupProvider;
     private $baseDn;
     private $basePw;
     private $userDN;
     private $defaultRoles;
     private $userQuery;
-    private $groupQuery;
-    private $groupBaseDN;
-    private $groupId;
 
     /**
      * LdapMultiEncoderUserProvider constructor.
      *
      * @param LdapInterface $ldapClient
+     * @param LdapGroupProvider $groupProvider
      * @param string              $baseDn
      * @param string|null $basePw
      * @param string $userDN
      * @param string $userQuery
-     * @param string              $groupBaseDN
-     * @param string $groupQuery
      * @param string[] $defaultRoles
-     * @param string $groupId
      */
-    public function __construct(LdapInterface $ldapClient,$baseDn, $basePw, $userDN,$userQuery,$groupBaseDN,$groupQuery, Array $defaultRoles = ['ROLE_USER'], $groupId = 'cn')
+    public function __construct(LdapInterface $ldapClient, LDAPGroupProvider $groupProvider,
+                                $baseDn, $basePw, $userDN, $userQuery, Array $defaultRoles = ['ROLE_USER'])
     {
-
         $this->ldapClient        = $ldapClient;
+        $this->groupProvider = $groupProvider;
         $this->baseDn            = $baseDn;
         $this->basePw            = $basePw;
         $this->userDN            = $userDN;
         $this->userQuery         = $userQuery;
-        $this->groupQuery        = $groupQuery;
         $this->defaultRoles      = $defaultRoles;
-        $this->groupBaseDN       = $groupBaseDN;
-        $this->groupId = $groupId;
     }
-
-
 
     /**
      * {@inheritdoc}
@@ -78,20 +71,10 @@ class LDAPUserProvider implements UserProviderInterface
             $userQuery = str_replace('{username}', $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER), $this->userQuery);
             $matches = $this->ldapClient->query($this->userDN, $userQuery)->execute()->toArray();
             $user = $matches[0];
-            
+
             if ($user) {
-                $ldapGroupSearchQuery = str_replace('{userDN}', $user->getDn(), $this->groupQuery);
-
-                $groups = $this->defaultRoles;
-                
-                
-                $ldapGroups = $this->ldapClient->query($this->groupBaseDN, $ldapGroupSearchQuery)->execute();
-                foreach ($ldapGroups as $group){
-                    if (!empty($group->getAttribute('cn'))) {
-                        $groups[] = 'ROLE_GROUP_' . strtoupper($group->getAttribute('cn')[0]);
-                    }
-
-                }
+                $roles = \array_unique(\array_merge($this->defaultRoles, $this->groupProvider->getRolesByUserEntry($user, $username)));
+                return new LdapUser($username, $roles);
             } else {
                 throw new UsernameNotFoundException(sprintf('Users "%s" groups could not be fetched from LDAP.', $username), 0);
             }
@@ -104,7 +87,6 @@ class LDAPUserProvider implements UserProviderInterface
 
 
 
-        return new LdapUser($username, $groups);
     }
 
     public function supportsClass($class)

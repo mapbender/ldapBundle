@@ -29,14 +29,12 @@ services:
         class: Mapbender\LDAPBundle\Security\Provider\LDAPUserProvider
         arguments:
         - '@ldapClient'
+        - '@mbldap.group_identities_provider'
         - '%ldap.bind.dn%'
         - '%ldap.bind.pwd%'
         - '%ldap.user.baseDN%'
         - '%ldap.user.query%'
-        - '%ldap.group.baseDN%'
-        - '%ldap.group.query%'
         - [ROLE_USER]
-        - '%ldap.group.id%'
     mbldap.group_identities_provider:
         class: Mapbender\LDAPBundle\Security\Provider\LDAPGroupProvider
         arguments:
@@ -44,6 +42,7 @@ services:
         - '%ldap.group.baseDN%'
         - '%ldap.group.id%'
         - '%ldap.group.adminFilter%'
+        - '%ldap.group.query%'
     fom.ldap_client:
         alias: ldapClient
     fom.identities.provider:
