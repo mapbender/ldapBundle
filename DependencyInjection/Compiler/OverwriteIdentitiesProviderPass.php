@@ -14,8 +14,8 @@ class OverwriteIdentitiesProviderPass implements CompilerPassInterface
         $container->register('fom.identities.provider', "Mapbender\LDAPBundle\Security\Provider\LDAPIdentitiesProvider")
             ->addArgument(new Reference('doctrine'))
             ->addArgument(new Reference('fom.ldap_user_identities_provider'))
+            ->addArgument(new Reference('mbldap.group_identities_provider'))
             ->addArgument('%fom.user_entity%')
-            ->addArgument(new Reference('service_container'))
         ;
     }
 }

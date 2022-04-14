@@ -11,6 +11,8 @@ parameters:
     ldap_bind_dn: '%ldap.bind.dn%'
     ldap_bind_pwd: '%ldap.bind.pwd%'
 
+## Defaults
+    ldap.group.id: cn
 
 services:
     ldapClient:
@@ -33,3 +35,10 @@ services:
         - '%ldap.group.query%'
         - [ROLE_USER]
         - '%ldap.group.id%'
+    mbldap.group_identities_provider:
+        class: Mapbender\LDAPBundle\Security\Provider\LDAPGroupProvider
+        arguments:
+        - '@fom.ldap_client'
+        - '%ldap.group.baseDN%'
+        - '%ldap.group.id%'
+        - '%ldap.group.adminFilter%'
