@@ -8,6 +8,8 @@
         {"name": "David Patzke"}
     ],
     "require": {
+        "ext-ldap": "*",
+        "php": ">=5.5",
         "symfony/ldap": "^3.4 || ^4 || ^5 || ^6",
         "mapbender/fom": "~3.1.7 || ^3.2.7"
     },
