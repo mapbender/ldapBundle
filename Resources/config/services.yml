@@ -11,6 +11,10 @@ parameters:
     ldap_bind_dn: '%ldap.bind.dn%'
     ldap_bind_pwd: '%ldap.bind.pwd%'
 
+# Fix bad parameter case baseDN (expected) vs baseDn (from bad example config in README.md)
+# parameter names are now case sensitive
+    ldap.user.baseDN: '%ldap.user.baseDn%'
+    ldap.group.baseDN: '%ldap.group.baseDn%'
 ## Defaults
     ldap.group.id: cn
 
