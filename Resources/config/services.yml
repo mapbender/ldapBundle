@@ -30,8 +30,6 @@ services:
         arguments:
         - '@ldapClient'
         - '@mbldap.group_identities_provider'
-        - '%ldap.bind.dn%'
-        - '%ldap.bind.pwd%'
         - '%ldap.user.baseDN%'
         - '%ldap.user.query%'
         - [ROLE_USER]

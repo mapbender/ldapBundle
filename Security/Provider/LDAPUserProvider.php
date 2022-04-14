@@ -3,7 +3,7 @@
 
 namespace Mapbender\LDAPBundle\Security\Provider;
 
-use Symfony\Component\Ldap\LdapInterface;
+use Mapbender\LDAPBundle\Component\LdapClient;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,11 +16,10 @@ use Mapbender\LDAPBundle\Security\User\LDAPUser;
  */
 class LDAPUserProvider implements UserProviderInterface
 {
+    /** @var LdapClient */
     private $ldapClient;
     /** @var LDAPGroupProvider */
     protected $groupProvider;
-    private $baseDn;
-    private $basePw;
     private $userDN;
     private $defaultRoles;
     private $userQuery;
@@ -28,21 +27,17 @@ class LDAPUserProvider implements UserProviderInterface
     /**
      * LdapMultiEncoderUserProvider constructor.
      *
-     * @param LdapInterface $ldapClient
+     * @param LdapClient $ldapClient
      * @param LdapGroupProvider $groupProvider
-     * @param string              $baseDn
-     * @param string|null $basePw
      * @param string $userDN
      * @param string $userQuery
      * @param string[] $defaultRoles
      */
-    public function __construct(LdapInterface $ldapClient, LDAPGroupProvider $groupProvider,
-                                $baseDn, $basePw, $userDN, $userQuery, Array $defaultRoles = ['ROLE_USER'])
+    public function __construct(LdapClient $ldapClient, LDAPGroupProvider $groupProvider,
+                                $userDN, $userQuery, Array $defaultRoles = ['ROLE_USER'])
     {
         $this->ldapClient        = $ldapClient;
         $this->groupProvider = $groupProvider;
-        $this->baseDn            = $baseDn;
-        $this->basePw            = $basePw;
         $this->userDN            = $userDN;
         $this->userQuery         = $userQuery;
         $this->defaultRoles      = $defaultRoles;
@@ -67,7 +62,7 @@ class LDAPUserProvider implements UserProviderInterface
     {
         try {
 
-            $this->ldapClient->bind($this->baseDn,$this->basePw);
+            $this->ldapClient->bind();
             $userQuery = str_replace('{username}', $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER), $this->userQuery);
             $matches = $this->ldapClient->query($this->userDN, $userQuery)->execute()->toArray();
             $user = $matches[0];

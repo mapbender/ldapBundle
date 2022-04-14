@@ -34,7 +34,7 @@ class LdapClient extends \FOM\UserBundle\Component\Ldap\Client implements LdapIn
 
     public function bind($dn = null, $password = null)
     {
-        $this->adapter->getConnection()->bind($dn, $password);
+        $this->adapter->getConnection()->bind($dn ?: $this->bindDn, $password ?: $this->bindPassword);
     }
 
     public function query($dn, $query, array $options = [])
