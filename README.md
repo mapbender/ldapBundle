@@ -58,12 +58,12 @@ firewalls:
 Add your LDAP server settings at the bottom of the `parameters.yml`:
 
 ```yml
-ldap.host: ỳour.ldap-server.com
+ldap.host: ldap.example.com
 ldap.port: 389
 ldap.version: 3
 ldap.useSSL: false
 ldap.useTLS: false
-ldap.bind.dn: user@ỳour.ldap-server.com
+ldap.bind.dn: cn=user,dc=example,dc=com
 ldap.bind.pwd: passwort
 
 ldap.user.nameAttribute: cn
