@@ -55,33 +55,18 @@ class LDAPUserProvider implements UserProviderInterface
         return new LdapUser($user->getUsername(), $user->getRoles());
     }
 
-
-
-
     public function loadUserByUsername($username)
     {
-        try {
+        $this->ldapClient->bind();
+        $userQuery = str_replace('{username}', $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER), $this->userQuery);
+        $matches = $this->ldapClient->query($this->userDN, $userQuery)->execute()->toArray();
 
-            $this->ldapClient->bind();
-            $userQuery = str_replace('{username}', $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER), $this->userQuery);
-            $matches = $this->ldapClient->query($this->userDN, $userQuery)->execute()->toArray();
-            $user = $matches[0];
-
-            if ($user) {
-                $roles = \array_unique(\array_merge($this->defaultRoles, $this->groupProvider->getRolesByUserEntry($user, $username)));
-                return new LdapUser($username, $roles);
-            } else {
-                throw new UsernameNotFoundException(sprintf('Users "%s" groups could not be fetched from LDAP.', $username), 0);
-            }
-
-
-        } catch(\Exception $e){
-            //This is in fact not a UsernameNotFoundException but otherwise the chain user provider will not work because it catches only this particular exception
-            throw new UsernameNotFoundException("Connection to LDAP Server could be established", 0, $e);
+        if ($matches) {
+            $roles = \array_unique(\array_merge($this->defaultRoles, $this->groupProvider->getRolesByUserEntry($matches[0], $username)));
+            return new LdapUser($username, $roles);
+        } else {
+            throw new UsernameNotFoundException(sprintf('User "%s" could not be fetched from LDAP.', $username), 0);
         }
-
-
-
     }
 
     public function supportsClass($class)
@@ -89,5 +74,3 @@ class LDAPUserProvider implements UserProviderInterface
         return true;
     }
 }
-
-
