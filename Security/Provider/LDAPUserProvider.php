@@ -75,8 +75,7 @@ class LDAPUserProvider implements UserProviderInterface
         try {
 
             $this->ldapClient->bind($this->baseDn,$this->basePw);
-            $username = $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER);
-            $userQuery = str_replace('{username}', $username, $this->userQuery);
+            $userQuery = str_replace('{username}', $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER), $this->userQuery);
             $matches = $this->ldapClient->query($this->userDN, $userQuery)->execute()->toArray();
             $user = $matches[0];
             
