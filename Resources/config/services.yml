@@ -46,3 +46,10 @@ services:
         - '%ldap.group.adminFilter%'
     fom.ldap_client:
         alias: ldapClient
+    fom.identities.provider:
+        class: Mapbender\LDAPBundle\Security\Provider\LDAPIdentitiesProvider
+        arguments:
+            - '@doctrine'
+            - '@fom.ldap_user_identities_provider'
+            - '@mbldap.group_identities_provider'
+            - '%fom.user_entity%'
