@@ -25,8 +25,6 @@ class LDAPUserProvider implements UserProviderInterface
     private $userQuery;
 
     /**
-     * LdapMultiEncoderUserProvider constructor.
-     *
      * @param LdapClient $ldapClient
      * @param LdapGroupProvider $groupProvider
      * @param string $userDN
@@ -57,6 +55,13 @@ class LDAPUserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
+        // NOTE: when wrapped in a chain provider, UserNameNotFoundException is caught and silently
+        //       skips to the next provider, if any
+        /** @see \Symfony\Component\Security\Core\User\ChainUserProvider::loadUserByUsername() */
+        if (!$this->ldapClient->getHost()) {
+            throw new UsernameNotFoundException('LDAP lookup disabled with empty host configuration', 0);
+        }
+
         $this->ldapClient->bind();
         $userQuery = str_replace('{username}', $this->ldapClient->escape($username, '', LDAP_ESCAPE_FILTER), $this->userQuery);
         $matches = $this->ldapClient->query($this->userDN, $userQuery)->execute()->toArray();

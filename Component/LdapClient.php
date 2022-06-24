@@ -74,4 +74,9 @@ class LdapClient extends \FOM\UserBundle\Component\Ldap\Client implements LdapIn
         }
         return $records;
     }
+
+    public function getHost()
+    {
+        return $this->host;
+    }
 }
