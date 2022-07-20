@@ -62,6 +62,9 @@ class LdapClient extends \FOM\UserBundle\Component\Ldap\Client implements LdapIn
      */
     public function getObjects($baseDn, $filter)
     {
+        if (!$this->host) {
+            return array();
+        }
         if (!$this->adapter->getConnection()->isBound()) {
             $this->adapter->getConnection()->bind($this->bindDn, $this->bindPassword);
         }
