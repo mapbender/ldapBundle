@@ -4,9 +4,9 @@
 namespace Mapbender\LDAPBundle\Security\Provider;
 
 
+use FOM\UserBundle\Component\DummyGroup;
 use FOM\UserBundle\Component\Ldap\Client;
 use Mapbender\LDAPBundle\Component\LdapClient;
-use Mapbender\LDAPBundle\Security\User\LDAPGroup;
 use Symfony\Component\Ldap\Entry;
 
 class LDAPGroupProvider
@@ -17,18 +17,20 @@ class LDAPGroupProvider
     protected $identifierAttribute;
     protected $filter;
     protected $queryTemplate;
+    protected $rolePrefix;
 
-    public function __construct(LdapClient $client, $baseDn, $identifierAttribute, $filter, $queryTemplate)
+    public function __construct(LdapClient $client, $baseDn, $identifierAttribute, $filter, $queryTemplate, $rolePrefix)
     {
         $this->client = $client;
         $this->baseDn = $baseDn;
         $this->identifierAttribute = $identifierAttribute;
         $this->filter = $filter;
         $this->queryTemplate = $queryTemplate;
+        $this->rolePrefix = $rolePrefix;
     }
 
     /**
-     * @return LDAPGroup[]
+     * @return DummyGroup[]
      */
     public function getGroups()
     {
@@ -42,12 +44,14 @@ class LDAPGroupProvider
 
     /**
      * @param array $record
-     * @return LDAPGroup
+     * @return DummyGroup
      */
     protected function transformGroupRecord(array $record)
     {
         $identifier = $record[$this->identifierAttribute][0];
-        return new LDAPGroup($identifier);
+        $role = $this->rolePrefix . strtoupper($identifier);
+        $title = $this->mb_ucfirst($identifier) . ' (LDAP)';
+        return new DummyGroup($role, $title);
     }
 
     /**
@@ -66,9 +70,21 @@ class LDAPGroupProvider
         foreach ($ldapGroups as $group) {
             $groupIds = $group->getAttribute($this->identifierAttribute);
             if ($groupIds) {
-                $roleNames[] = 'ROLE_GROUP_' . strtoupper($groupIds[0]);
+                $roleNames[] = $this->rolePrefix . strtoupper($groupIds[0]);
             }
         }
         return $roleNames;
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function mb_ucfirst($value)
+    {
+        return
+              \mb_strtoupper(\mb_substr($value, 0, 1))
+            . \mb_substr($value, 1)
+        ;
     }
 }

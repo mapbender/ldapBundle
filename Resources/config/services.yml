@@ -15,8 +15,8 @@ parameters:
 # parameter names are now case sensitive
     ldap.user.baseDN: '%ldap.user.baseDn%'
     ldap.group.baseDN: '%ldap.group.baseDn%'
-## Defaults
     ldap.group.id: cn
+    ldap.group.role_prefix: ROLE_GROUP_
 
 services:
     ldapClient:
@@ -45,6 +45,7 @@ services:
         - '%ldap.group.id%'
         - '%ldap.group.adminFilter%'
         - '%ldap.group.query%'
+        - '%ldap.group.role_prefix%'
     fom.ldap_client:
         alias: ldapClient
     fom.identities.provider:
