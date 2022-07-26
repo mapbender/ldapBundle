@@ -1,3 +1,6 @@
+## v1.1.3
+* Add configurable ldap.group.role_prefix parameter (for ACL assignments / checks)
+
 ## v1.1.2
 * Suppress identities lookup connection error (=Mapbender loading assignable ACL identities) when configured with empty host
 
