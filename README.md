@@ -15,6 +15,8 @@ Register the bundle in AppKernel.php:
 new Mapbender\LDAPBundle\MapbenderLDAPBundle(),
 ```
 
+Enable LDAP extension for php.
+
 ### 2. Configuration
 
 In the `security.yml` add the ldapProvider and some firewall configuration: 
