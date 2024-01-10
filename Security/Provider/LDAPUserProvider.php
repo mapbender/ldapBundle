@@ -4,7 +4,6 @@
 namespace Mapbender\LDAPBundle\Security\Provider;
 
 use Mapbender\LDAPBundle\Component\LdapClient;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
