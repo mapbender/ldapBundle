@@ -7,20 +7,19 @@
  */
 
 namespace Mapbender\LDAPBundle\Security\User;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class LDAPUser implements UserInterface
 {
-
     protected $username;
     protected $roles;
 
-    public function __construct($username,Array $roles = ["ROLE_USER"])
+    public function __construct($username, Array $roles = ['ROLE_USER'])
     {
         $this->username = $username;
         $this->roles = $roles;
     }
-
 
     public function getRoles()
     {
@@ -46,10 +45,11 @@ class LDAPUser implements UserInterface
     {
         return false;
     }
+
     /*
      * This is uses to create proper ACEs in Mapbender
-     * */
-    public function getClass(){
-        return "Mapbender\LDAPBundle\Security\User\LDAPUser";
+     */
+    public function getClass() {
+        return 'Mapbender\LDAPBundle\Security\User\LDAPUser';
     }
 }

@@ -41,14 +41,15 @@ firewalls:
   secured_area:
     pattern:    ^/
     anonymous: ~
-    provider: chain_provider
+    provider: main
     mapbender_ldap:
       login_path: /user/login
       check_path: /user/login/check
+      provider: ldapProvider
     form_login:
       check_path: /user/login/check
       login_path: /user/login
-      provider: main
+      csrf_token_generator: security.csrf.token_manager
     logout:
       path:   /user/logout
       target: /

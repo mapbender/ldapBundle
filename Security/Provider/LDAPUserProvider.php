@@ -4,12 +4,12 @@
 namespace Mapbender\LDAPBundle\Security\Provider;
 
 use Mapbender\LDAPBundle\Component\LdapClient;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Mapbender\LDAPBundle\Security\User\LDAPUser;
-
 
 /**
  * @author  David Patzke <david.patzke@wheregroup.com>
@@ -31,14 +31,17 @@ class LDAPUserProvider implements UserProviderInterface
      * @param string $userQuery
      * @param string[] $defaultRoles
      */
-    public function __construct(LdapClient $ldapClient, LDAPGroupProvider $groupProvider,
-                                $userDN, $userQuery, Array $defaultRoles = ['ROLE_USER'])
+    public function __construct(LdapClient $ldapClient,
+                                LDAPGroupProvider $groupProvider,
+                                $userDN,
+                                $userQuery,
+                                Array $defaultRoles = ['ROLE_USER'])
     {
-        $this->ldapClient        = $ldapClient;
+        $this->ldapClient = $ldapClient;
         $this->groupProvider = $groupProvider;
-        $this->userDN            = $userDN;
-        $this->userQuery         = $userQuery;
-        $this->defaultRoles      = $defaultRoles;
+        $this->userDN = $userDN;
+        $this->userQuery = $userQuery;
+        $this->defaultRoles = $defaultRoles;
     }
 
     /**

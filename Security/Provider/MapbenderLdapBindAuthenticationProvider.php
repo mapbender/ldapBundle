@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\LdapBindAuthenticationProvider;
 
-class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationProvider
+class MapbenderLdapBindAuthenticationProvider extends LdapBindAuthenticationProvider
 {
     private $encoderFactory;
 
@@ -30,8 +30,7 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
                                 $userQuery,
                                 $searchDn, $searchPassword)
     {
-        parent::__construct( $userProvider,  $userChecker, $providerKey,  $ldap, $dnString, true, $searchDn, $searchPassword);
-
+        parent::__construct($userProvider, $userChecker, $providerKey, $ldap, $dnString, true, $searchDn, $searchPassword);
         $this->encoderFactory = $encoderFactory ;
 
         // support Mapbender < 3.2.x (Symfony 2.8)
@@ -40,28 +39,16 @@ class MapbenderLdapBindAuthenticationProvider extends  LdapBindAuthenticationPro
         }
     }
 
-
-
     /**
      * {@inheritdoc}
      */
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
-
         $password = $token->getCredentials();
-        try{
+        try {
             parent::checkAuthentication($user, $token);
-        } catch(BadCredentialsException $e){
-
-            try {
-                if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $password, $user->getSalt())) {
-                    throw new BadCredentialsException('The presented password is invalid.');
-                }
-            } catch (\Exception $e){
-                throw new BadCredentialsException('The presented password is invalid.');
-            }
+        } catch (BadCredentialsException $e) {
+            throw new BadCredentialsException('The presented password is invalid: ' . $e->getMessage());
         }
     }
-
-
 }
