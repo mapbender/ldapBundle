@@ -52,4 +52,9 @@ class LDAPUser implements UserInterface
     public function getClass() {
         return 'Mapbender\LDAPBundle\Security\User\LDAPUser';
     }
+
+    public function __toString()
+    {
+        return $this->getUsername() ?: '';
+    }
 }
