@@ -48,7 +48,13 @@ class MapbenderLdapBindAuthenticationProvider extends LdapBindAuthenticationProv
         try {
             parent::checkAuthentication($user, $token);
         } catch (BadCredentialsException $e) {
-            throw new BadCredentialsException('The presented password is invalid: ' . $e->getMessage());
+            try {
+                if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $password, $user->getSalt())) {
+                    throw new BadCredentialsException('The presented password is invalid.');
+                }
+            } catch (\Exception $e){
+                throw new BadCredentialsException('The presented password is invalid.');
+            }
         }
     }
 }
