@@ -1,3 +1,6 @@
+## v1.1.4
+* Add toString() function for LdapUser: Fixes storage of LDAP username in database
+
 ## v1.1.3
 * Add configurable ldap.group.role_prefix parameter (for ACL assignments / checks)
 
