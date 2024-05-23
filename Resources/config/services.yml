@@ -1,57 +1,66 @@
-parameters:
-    # Alias to values Mapbender ACL assignment machinery evaluates
-    ## for fom.ldap_user_identities_provider
-    ldap_user_base_dn: '%ldap.user.baseDN%'
-    ldap_user_name_attribute: '%ldap.user.nameAttribute%'
-    ldap_user_filter: '%ldap.user.adminFilter%'
-    ## for fom.ldap_client
-    ldap_host: '%ldap.host%'
-    ldap_port: '%ldap.port%'
-    ldap_version: '%ldap.version%'
-    ldap_bind_dn: '%ldap.bind.dn%'
-    ldap_bind_pwd: '%ldap.bind.pwd%'
-
-# Fix bad parameter case baseDN (expected) vs baseDn (from bad example config in README.md)
-# parameter names are now case sensitive
-    ldap.user.baseDN: '%ldap.user.baseDn%'
-    ldap.group.baseDN: '%ldap.group.baseDn%'
-    ldap.group.id: cn
-    ldap.group.role_prefix: ROLE_GROUP_
-
 services:
-    ldapClient:
-        class: Mapbender\LDAPBundle\Component\LdapClient
+    Symfony\Component\Ldap\Ldap:
+        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
+        tags:
+            - ldap
+
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
         arguments:
-        - '%ldap.host%' #Address to LDAPServer
-        - '%ldap.port%' #Port where LDAPServer is listening
-        - '%ldap.version%' #LDAP Protocol version
-        - '%ldap.useSSL%'           # SSL #Use SSL
-        - '%ldap.useTLS%'      # TLS 'Use TLS
+            - host: '%ldap.host%'
+            - port: '%ldap.port%'
+            - encryption: '%ldap.encryption'
+            - options:
+                  protocol_version: '%ldap.version'
+                  referrals: false
+
+    mapbender.ldap.client:
+        class: Mapbender\LDAPBundle\Security\LdapClient
+        arguments:
+        - '%ldap.host%'
+        - '%ldap.port%'
+        - '%ldap.version%'
+        - '%ldap.encryption%'
         - '%ldap.bind.dn%'
         - '%ldap.bind.pwd%'
-    LDAPUserProvider:
-        class: Mapbender\LDAPBundle\Security\Provider\LDAPUserProvider
+
+    mapbender.ldap.user_provider:
+        class: Mapbender\LDAPBundle\Security\LdapUserProvider
         arguments:
-        - '@ldapClient'
-        - '@mbldap.group_identities_provider'
-        - '%ldap.user.baseDN%'
+        - '@mapbender.ldap.client'
+        - '%ldap.user.baseDn%'
         - '%ldap.user.query%'
-        - [ROLE_USER]
-    mbldap.group_identities_provider:
-        class: Mapbender\LDAPBundle\Security\Provider\LDAPGroupProvider
-        arguments:
-        - '@fom.ldap_client'
-        - '%ldap.group.baseDN%'
-        - '%ldap.group.id%'
-        - '%ldap.group.adminFilter%'
+        - '%ldap.user.groupKey%'
+        - '%ldap.group.baseDn%'
         - '%ldap.group.query%'
-        - '%ldap.group.role_prefix%'
-    fom.ldap_client:
-        alias: ldapClient
-    fom.identities.provider:
-        class: Mapbender\LDAPBundle\Security\Provider\LDAPIdentitiesProvider
+        - '%ldap.group.id%'
+        - '%ldap.group.defaultRoles%'
+
+    mapbender.ldap.authenticator:
+        class: Mapbender\LDAPBundle\Security\MapbenderLdapAuthenticator
         arguments:
-            - '@doctrine'
-            - '@fom.ldap_user_identities_provider'
-            - '@mbldap.group_identities_provider'
-            - '%fom.user_entity%'
+            - '@security.authenticator.form_login.secured_area'
+            - '@mapbender.ldap.client'
+            - '%ldap.user.baseDn%'
+            - '%ldap.user.query%'
+
+    ldap.security.subject_domain.user:
+        class: Mapbender\LDAPBundle\Security\Permission\SubjectDomainLdapUser
+        tags:
+            - fom.security.subject_domain
+        arguments:
+            - '@mapbender.ldap.client'
+            - '%ldap.user.baseDn%'
+            - '%ldap.user.adminQuery%'
+            - '%ldap.user.id%'
+            - '%ldap.user.commonName%'
+
+    ldap.security.subject_domain.group:
+        class: Mapbender\LDAPBundle\Security\Permission\SubjectDomainLdapGroup
+        tags:
+            - fom.security.subject_domain
+        arguments:
+            - '@mapbender.ldap.client'
+            - '%ldap.group.baseDn%'
+            - '%ldap.group.adminQuery%'
+            - '%ldap.group.id%'
+            - '%ldap.group.commonName%'

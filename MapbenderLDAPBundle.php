@@ -7,9 +7,6 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Mapbender\LDAPBundle\DependencyInjection\Factory\MapbenderLDAPLoginFactory;
-
-
 
 class MapbenderLDAPBundle extends Bundle
 {
@@ -20,13 +17,5 @@ class MapbenderLDAPBundle extends Bundle
         $loader = new YamlFileLoader($container, $configLocator);
         $loader->load('services.yml');
         $container->addResource(new FileResource($configLocator->locate('services.yml')));
-
-        $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new MapbenderLDAPLoginFactory());
-    }
-
-    public function getContainerExtension()
-    {
-        return null;
     }
 }

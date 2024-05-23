@@ -1,3 +1,6 @@
+## v2.0.0
+* Refactored LdapBundle to work with Mapbender v4.0
+
 ## v1.1.4
 * Add toString() function for LdapUser: Fixes storage of LDAP username in database
 
