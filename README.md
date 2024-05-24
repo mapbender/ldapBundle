@@ -100,7 +100,7 @@ ldap.group.defaultRoles: [ROLE_USER] # this should be ROLE_USER in most cases
 Install Mapbender LDAP via Composer:
 
 ```sh
-composer require mapbender/ldapbundle
+composer require mapbender/ldapbundle:v1.1.4
 ```
 Register the bundle in AppKernel.php:
 
