@@ -82,7 +82,7 @@ class LdapUserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return true;
+        return $class === LdapUser::class;
     }
 
     protected function findLdapUserRoles(Entry $user)
