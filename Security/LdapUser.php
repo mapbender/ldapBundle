@@ -6,11 +6,12 @@
  * Time: 14:20
  */
 
-namespace Mapbender\LDAPBundle\Security\User;
+namespace Mapbender\LDAPBundle\Security;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-class LDAPUser implements UserInterface
+class LdapUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     protected $username;
     protected $roles;
@@ -21,14 +22,14 @@ class LDAPUser implements UserInterface
         $this->roles = $roles;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
-       return '';
+        return '';
     }
 
     public function getSalt()
@@ -46,15 +47,18 @@ class LDAPUser implements UserInterface
         return false;
     }
 
-    /*
-     * This is uses to create proper ACEs in Mapbender
-     */
-    public function getClass() {
-        return 'Mapbender\LDAPBundle\Security\User\LDAPUser';
-    }
-
     public function __toString()
     {
         return $this->getUsername() ?: '';
+    }
+
+    public function getId()
+    {
+        return null;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
     }
 }
