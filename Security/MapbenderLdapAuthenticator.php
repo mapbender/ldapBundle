@@ -53,7 +53,7 @@ class MapbenderLdapAuthenticator extends AbstractLoginFormAuthenticator
         $this->client->bind();
         $queryString = str_replace('{username}', $this->client->escape($username, '', LDAP_ESCAPE_FILTER), $this->query);
         $query = $this->client->query($this->baseDn, $queryString, [
-            'scope' => QueryInterface::SCOPE_ONE,
+            'scope' => QueryInterface::SCOPE_SUB,
         ]);
         $results = $query->execute();
 

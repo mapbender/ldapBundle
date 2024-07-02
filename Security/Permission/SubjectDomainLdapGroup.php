@@ -46,7 +46,7 @@ class SubjectDomainLdapGroup extends AbstractSubjectDomain
     {
         $this->client->bind();
         $query = $this->client->query($this->baseDn, $this->query, [
-            'scope' => QueryInterface::SCOPE_ONE,
+            'scope' => QueryInterface::SCOPE_SUB,
         ]);
         $ldapGroups = [];
 
