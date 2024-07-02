@@ -1,3 +1,6 @@
+## v2.0.1
+* Change to ldap_search function instead of ldap_list
+ 
 ## v2.0.0
 * Refactored LdapBundle to work with Mapbender v4.0
 
