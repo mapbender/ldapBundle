@@ -1,3 +1,6 @@
+## v2.0.2
+* Replace UsernameNotFoundException with new UserNotFoundException
+
 ## v2.0.1
 * Change to ldap_search function instead of ldap_list
  
