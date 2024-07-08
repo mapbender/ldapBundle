@@ -5,7 +5,7 @@ namespace Mapbender\LDAPBundle\Security;
 use Symfony\Component\Ldap\Adapter\QueryInterface;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Mapbender\LDAPBundle\Security\LdapClient;
@@ -65,7 +65,7 @@ class LdapUserProvider implements UserProviderInterface
         //       skips to the next provider, if any
         /** @see \Symfony\Component\Security\Core\User\ChainUserProvider::loadUserByUsername() */
         if (!$this->client->getHost()) {
-            throw new UsernameNotFoundException('LDAP lookup disabled with empty host configuration', 0);
+            throw new UserNotFoundException('LDAP lookup disabled with empty host configuration', 0);
         }
 
         $this->client->bind();
@@ -76,7 +76,7 @@ class LdapUserProvider implements UserProviderInterface
             $roles = $this->findLdapUserRoles($results[0]);
             return new LdapUser($username, $roles);
         } else {
-            throw new UsernameNotFoundException(sprintf('User "%s" could not be fetched from LDAP.', $username), 0);
+            throw new UserNotFoundException(sprintf('User "%s" could not be fetched from LDAP.', $username), 0);
         }
     }
 
