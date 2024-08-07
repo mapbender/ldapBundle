@@ -19,7 +19,7 @@ Enable the LDAP extension for php.
 
 ### 2. Configuration
 
-In the `security.yml` add the ldap- and chain-provider, some firewall configuration and a password hasher for the LdapUser:
+In the `security.yaml` add the ldap- and chain-provider, some firewall configuration and a password hasher for the LdapUser:
 
 ```yml
 ...
@@ -67,7 +67,7 @@ password_hashers:
 ...
 ```
 
-Add your LDAP server settings at the bottom of the `parameters.yml`:
+Add your LDAP server settings at the bottom of the `parameters.yaml`:
 
 ```yml
 ldap.host: ldap.example.com
