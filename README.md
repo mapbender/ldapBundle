@@ -19,7 +19,7 @@ Enable the LDAP extension for php.
 
 ### 2. Configuration
 
-In the `security.yaml` add the ldap- and chain-provider, some firewall configuration and a password hasher for the LdapUser:
+In the `/config/packages/security.yaml` add the ldap- and chain-provider, some firewall configuration and a password hasher for the LdapUser:
 
 ```yml
 ...
