@@ -61,7 +61,7 @@ class SubjectDomainLdapGroup extends AbstractSubjectDomain
         return array_map(
             fn($group) => new AssignableSubject(
                 self::SLUG,
-                $group['cn'],
+                $group['cn'] . ' (LDAP)',
                 $this->getIconClass(),
                 null,
                 null,

@@ -55,7 +55,7 @@ class SubjectDomainLdapUser extends AbstractSubjectDomain
         return array_map(
             fn($user) => new AssignableSubject(
                 self::SLUG,
-                $user['cn'],
+                $user['cn'] . ' (LDAP)',
                 $this->getIconClass(),
                 null,
                 null,
