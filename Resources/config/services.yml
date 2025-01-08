@@ -8,32 +8,32 @@ services:
         arguments:
             - host: '%ldap.host%'
             - port: '%ldap.port%'
-            - encryption: '%ldap.encryption'
+            - encryption: '%ldap.encryption%'
             - options:
-                  protocol_version: '%ldap.version'
+                  protocol_version: '%ldap.version%'
                   referrals: false
 
     mapbender.ldap.client:
         class: Mapbender\LDAPBundle\Security\LdapClient
         arguments:
-        - '%ldap.host%'
-        - '%ldap.port%'
-        - '%ldap.version%'
-        - '%ldap.encryption%'
-        - '%ldap.bind.dn%'
-        - '%ldap.bind.pwd%'
+            - '%ldap.host%'
+            - '%ldap.port%'
+            - '%ldap.version%'
+            - '%ldap.encryption%'
+            - '%ldap.bind.dn%'
+            - '%ldap.bind.pwd%'
 
     mapbender.ldap.user_provider:
         class: Mapbender\LDAPBundle\Security\LdapUserProvider
         arguments:
-        - '@mapbender.ldap.client'
-        - '%ldap.user.baseDn%'
-        - '%ldap.user.query%'
-        - '%ldap.user.groupKey%'
-        - '%ldap.group.baseDn%'
-        - '%ldap.group.query%'
-        - '%ldap.group.id%'
-        - '%ldap.group.defaultRoles%'
+            - '@mapbender.ldap.client'
+            - '%ldap.user.baseDn%'
+            - '%ldap.user.query%'
+            - '%ldap.user.groupKey%'
+            - '%ldap.group.baseDn%'
+            - '%ldap.group.query%'
+            - '%ldap.group.id%'
+            - '%ldap.group.defaultRoles%'
 
     mapbender.ldap.authenticator:
         class: Mapbender\LDAPBundle\Security\MapbenderLdapAuthenticator

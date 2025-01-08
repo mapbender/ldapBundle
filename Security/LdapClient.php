@@ -13,12 +13,12 @@ class LdapClient
 
     public function __construct($host, $port, $version, $encryption, $bindDn, $bindPwd)
     {
-        $adapterOptions = array_filter([
+        $adapterOptions = [
             'host' => $host,
             'port' => $port,
             'version' => $version,
             'encryption' => $encryption,
-        ]);
+        ];
         $this->adapter = new Adapter($adapterOptions);
         $this->host = $host;
         $this->bindDn = $bindDn;
