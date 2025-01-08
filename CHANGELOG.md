@@ -1,3 +1,6 @@
+## v2.0.5
+* Fixes display of LDAP users/groups and provides custom config for the Symfony Ldap-Adapter
+
 ## v2.0.2
 * Replace UsernameNotFoundException with new UserNotFoundException
 
