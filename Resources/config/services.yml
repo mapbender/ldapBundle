@@ -1,3 +1,6 @@
+parameters:
+    ldap.user.customSubject: null
+
 services:
     Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
@@ -53,6 +56,7 @@ services:
             - '%ldap.user.adminQuery%'
             - '%ldap.user.id%'
             - '%ldap.user.commonName%'
+            - '%ldap.user.customSubject%'
 
     ldap.security.subject_domain.group:
         class: Mapbender\LDAPBundle\Security\Permission\SubjectDomainLdapGroup

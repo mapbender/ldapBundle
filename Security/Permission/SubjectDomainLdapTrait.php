@@ -14,13 +14,15 @@ trait SubjectDomainLdapTrait
     protected $query;
     protected $id;
     protected $commonName;
+    protected $customSubject;
 
-    public function __construct(LdapClient $client, $baseDn, $query, $id, $commonName)
+    public function __construct(LdapClient $client, $baseDn, $query, $id, $commonName, $customSubject = null)
     {
         $this->client = $client;
         $this->baseDn = $baseDn;
         $this->query = $query;
         $this->id = $id;
         $this->commonName = $commonName;
+        $this->customSubject = $customSubject;
     }
 }

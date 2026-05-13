@@ -46,9 +46,11 @@ class SubjectDomainLdapUser extends AbstractSubjectDomain
         $ldapUsers = [];
 
         foreach ($query->execute() as $entry) {
+            $customSubject = (!empty($this->customSubject) && !empty($entry->getAttribute($this->customSubject))) ? $entry->getAttribute($this->customSubject)[0] : null;
             $ldapUsers[] = [
                 'id' => $entry->getAttribute($this->id)[0],
                 'cn' => $entry->getAttribute($this->commonName)[0],
+                'customSubject' => $customSubject,
             ];
         }
 
@@ -59,7 +61,7 @@ class SubjectDomainLdapUser extends AbstractSubjectDomain
                 $this->getIconClass(),
                 null,
                 null,
-                $user['id']
+                (!empty($user['customSubject'])) ? $user['customSubject'] : $user['id'],
             ),
             $ldapUsers
         );
