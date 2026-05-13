@@ -83,6 +83,7 @@ ldap.user.adminQuery: (objectClass=user)
 ldap.user.id: sAMAccountName
 ldap.user.commonName: cn
 ldap.user.groupKey: memberOf
+ldap.user.customSubject: ~ # configure this to use a subject other than the user ID to secure apps, e.g. userPrincipalName
 
 ldap.group.baseDn: ou=groups,dc=example,dc=com
 ldap.group.query: (&(distinguishedName={groupname})(objectClass=group))

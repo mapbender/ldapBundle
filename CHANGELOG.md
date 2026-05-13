@@ -1,3 +1,6 @@
+## v2.1.0
+* Add option to use a subject other than the user ID 
+
 ## v2.0.5
 * Fixes display of LDAP users/groups and provides custom config for the Symfony Ldap-Adapter
 
