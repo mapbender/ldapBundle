@@ -51,10 +51,11 @@ class MapbenderLdapAuthenticator extends AbstractLoginFormAuthenticator
         $passport = $this->authenticator->authenticate($request);
         $username = $passport->getUser()->getUsername();
         $this->client->bind();
-        $queryString = str_replace('{username}', $this->client->escape($username, '', LDAP_ESCAPE_FILTER), $this->query);
+        $queryString = str_replace('{user_identifier}', $this->client->escape($username, '', LDAP_ESCAPE_FILTER), $this->query);
         $query = $this->client->query($this->baseDn, $queryString, [
             'scope' => QueryInterface::SCOPE_SUB,
         ]);
+
         $results = $query->execute();
 
         if ($results->count() === 1) {

@@ -50,7 +50,7 @@ class LdapUserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof LdapUser) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
@@ -69,7 +69,7 @@ class LdapUserProvider implements UserProviderInterface
         }
 
         $this->client->bind();
-        $queryString = str_replace('{username}', $this->client->escape($username, '', LDAP_ESCAPE_FILTER), $this->query);
+        $queryString = str_replace('{user_identifier}', $this->client->escape($username, '', LDAP_ESCAPE_FILTER), $this->query);
         $results = $this->client->query($this->baseDn, $queryString)->execute();
 
         if ($results->count() === 1) {
@@ -80,7 +80,7 @@ class LdapUserProvider implements UserProviderInterface
         }
     }
 
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return $class === LdapUser::class;
     }
