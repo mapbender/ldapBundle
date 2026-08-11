@@ -42,9 +42,9 @@ class LdapUser implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
-        return false;
+        // Add your implementation to erase the credentials here
     }
 
     public function __toString()
