@@ -1,3 +1,6 @@
+## v2.3.0
+* Update LdapBundle for Symfony-Ldap v7.4
+
 ## v2.2.0
 * Add Symfony 7.4 support
 
